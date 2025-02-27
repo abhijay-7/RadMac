@@ -2,21 +2,47 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MainTheme from "./Maintheme/MainTheme";
 import { BiSolidUpvote } from "react-icons/bi";
-
 const Sidebar = () => {
-    
+
+  const[Checkval , setCheckval]   = useState(false);
+
   const [songList, setsongList] = useState([]);
   useEffect(() => {
     axios
       .get("/api/list/")
       .then((response) => {
+        
         setsongList(response.data);
-        console.log(response.data);
+updatelist();
+        // console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
+
+
+  // handle vote update /////
+
+  const handleupvote = async(id) =>{
+    try {
+      const result = await axios.post("/api/list/top", { check: Checkval ,id: id});
+setsongList(result.data);
+setCheckval(!Checkval);
+// console.log(result.data);
+updatelist();
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
+
+  
+  const updatelist = () => {
+    setsongList((prevList) => prevList.sort((a, b) => b.votes - a.votes));
+    console.log(songList); // This log will always show the old list due to state updates being asynchronous.
+  };
+
 
   return (
     <>
@@ -136,11 +162,10 @@ const Sidebar = () => {
                     <span className="flex-1 ms-3 whitespace-nowrap">
                       {item.title}
                     </span>
+                    <p>{item.votes}</p>
                     <button
                       className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 group hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                      onClick={() => {
-                        console.log("clicked");
-                      }}
+                      onClick={() => !Checkval && handleupvote(item.id)}
                     >
                       <BiSolidUpvote />
                     </button>
