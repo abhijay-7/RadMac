@@ -19,6 +19,21 @@ try{
 
 }
 
+function updateVote(checkval,id) {
+    // Find the song by id
+    const song = songList.find(item => item.id === id);
+
+    // If the song is found, increment its vote
+    if (song) {
+        if(!checkval)
+        song.votes++;
+    else song.votes--;
+    } else {
+        console.log("Song not found");
+    }
+    songList.sort((a, b) => b.vote - a.vote);
+}
+
 
 app.get("/", (req , res)=>{
     res.json(songList);
@@ -26,6 +41,15 @@ app.get("/", (req , res)=>{
 
 app.get("/api/list", (req , res)=>{
     res.json(songList);
+})
+
+app.post("/api/list/top",(req , res)=>{
+    console.log("post ok")
+    let toUpdateId = req.body.id
+    let checkval = req.body.check;
+updateVote(checkval ,toUpdateId);
+console.log(songList);
+res.json(songList);
 })
 
 app.get("/api", (req , res)=>{
