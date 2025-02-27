@@ -25,12 +25,12 @@ let cachedChunks = {};
 // chunking
 const preloadChunks = async (songPath) => {
     try {
-        const totalDuration = await getSongDuration(songPath);  // Wait for song duration
+        const totalDuration = await getSongDuration(songPath);  // Wait htmlFor song duration
         const totalChunks = Math.ceil(totalDuration / chunkSize);  // Calculate total number of chunks
 
         let chunkPromises = [];
 
-        for (let i = 0; i < totalChunks; i++) {
+        htmlFor (let i = 0; i < totalChunks; i++) {
             const startTime = i * chunkSize;
             const chunkFilePath = path.join(cacheDir, `chunk_${i}.mp3`);
 
@@ -41,7 +41,7 @@ const preloadChunks = async (songPath) => {
                         .setStartTime(startTime)
                         .duration(chunkSize)
                         .audioCodec('libmp3lame')
-                        .format('mp3')
+                        .htmlFormat('mp3')
                         .output(chunkFilePath)
                         .on('end', () => {
                             cachedChunks[startTime] = chunkFilePath; 
@@ -66,7 +66,7 @@ const getSongDuration = (songPath) => {
     return new Promise((resolve, reject) => {
         ffmpeg.ffprobe(songPath, (err, metadata) => {
             if (err) reject(err);
-            resolve(metadata.format.duration);
+            resolve(metadata.htmlFormat.duration);
         });
     });
 };

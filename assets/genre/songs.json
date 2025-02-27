@@ -1,0 +1,120 @@
+[
+    {
+      "id": 1,
+      "title": "Still_dre",
+      "artist": "Snoop dog",
+      "url": "assets/music/Dr. Dre - Still D.R.E. ft. Snoop Dogg.mp3",
+      "votes": 0
+    },
+    {
+      "id": 2,
+      "title": "Old Town Road",
+      "artist": "Lil Nas X",
+      "url": "assets/music/Lil Nas X - Old Town Road (Official Video) ft. Billy Ray Cyrus.mp3",
+      
+      "votes": 0
+    },
+    {
+      "id": 3,
+      "title": "See You Again",
+      "artist": "Wiz Khalifa",
+      "url": "assets/music/Wiz Khalifa - See You Again ft. Charlie Puth [Official Video] Furious 7 Soundtrack.mp3",
+      "votes": 0
+    },
+    
+      {
+        "id": 4,
+        "title": "Shape of You",
+        "artist": "Ed Sheeran",
+        "url": "assets/music/Ed Sheeran - Shape of You (Official Music Video).mp3",
+        "votes": 0
+      },
+      {
+        "id": 5,
+        "title": "Blinding Lights",
+        "artist": "The Weeknd",
+        "url": "assets/music/The Weeknd - Blinding Lights (Official Video).mp3",
+        "votes": 0
+      },
+      {
+        "id": 6,
+        "title": "Uptown Funk",
+        "artist": "Mark Ronson ft. Bruno Mars",
+        "url": "assets/music/Mark Ronson - Uptown Funk ft. Bruno Mars (Official Video).mp3",
+        "votes": 0
+      },
+      {
+        "id": 7,
+        "title": "Humble",
+        "artist": "Kendrick Lamar",
+        "url": "assets/music/Kendrick Lamar - HUMBLE. (Official Video).mp3",
+        "votes": 0
+      },
+      {
+        "id": 8,
+        "title": "Rockstar",
+        "artist": "Post Malone ft. 21 Savage",
+        "url": "assets/music/Post Malone - Rockstar ft. 21 Savage (Official Video).mp3",
+        "votes": 0
+      },
+      {
+        "id": 9,
+        "title": "Despacito",
+        "artist": "Luis Fonsi ft. Daddy Yankee",
+        "url": "assets/music/Luis Fonsi - Despacito ft. Daddy Yankee (Official Video).mp3",
+        "votes": 0
+      },
+      {
+        "id": 10,
+        "title": "Bad Guy",
+        "artist": "Billie Eilish",
+        "url": "assets/music/Billie Eilish - bad guy (Official Video).mp3",
+        "votes": 0
+      },
+      {
+        "id": 11,
+        "title": "God's Plan",
+        "artist": "Drake",
+        "url": "assets/music/Drake - God's Plan (Official Video).mp3",
+        "votes": 0
+      },
+      {
+        "id": 12,
+        "title": "Sunflower",
+        "artist": "Post Malone & Swae Lee",
+        "url": "assets/music/Post Malone, Swae Lee - Sunflower (Spider-Man: Into the Spider-Verse).mp3",
+        "votes": 0
+      },
+      {
+        "id": 13,
+        "title": "Peaches",
+        "artist": "Justin Bieber ft. Daniel Caesar, Giveon",
+        "url": "assets/music/Justin Bieber - Peaches (Official Video) ft. Daniel Caesar, Giveon.mp3",
+        "votes": 0
+      },
+        {
+        "id": 11,
+        "title": "God's Plan",
+        "artist": "Drake",
+        "url": "assets/music/Drake - God's Plan (Official Video).mp3",
+        "votes": 0
+      },
+      {
+        "id": 12,
+        "title": "Sunflower",
+        "artist": "Post Malone & Swae Lee",
+        "url": "assets/music/Post Malone, Swae Lee - Sunflower (Spider-Man: Into the Spider-Verse).mp3",
+        "votes": 0
+      },
+      {
+        "id": 13,
+        "title": "Peaches",
+        "artist": "Justin Bieber ft. Daniel Caesar, Giveon",
+        "url": "assets/music/Justin Bieber - Peaches (Official Video) ft. Daniel Caesar, Giveon.mp3",
+        "votes": 0
+      }
+    ]
+    
+
+
+  

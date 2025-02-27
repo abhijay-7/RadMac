@@ -1,23 +1,43 @@
 import bodyParser from 'body-parser'
 import express from 'express'
 import path from 'path'
-
+import fs from 'fs'
 const app = express();
 const port = 8080
 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+const songFilePath = path.join("assets/genre/songs.json")
+let songList = [];
+try{
+    const songdata = fs.readFileSync(songFilePath, 'utf-8');
+     songList = JSON.parse(songdata)
+     console.log("ok")
+
+}catch(error){
+    console.log("eror in getting data")
+
+}
+
 
 app.get("/", (req , res)=>{
-    res.send("HEllo bhai , welcoms to first page of radmac")
+    res.json(songList);
 })
 
-app.post ('/get' , (req , res)=>{
-    const name = req.body.name;
-    res.send(`Hello bhai ${name}`)
-    
+app.get("/api/list", (req , res)=>{
+    res.json(songList);
 })
+
+app.get("/api", (req , res)=>{
+    res.send("Hii");
+})
+
+// app.post ('/api/' , (req , res)=>{
+//     const name = req.body.name;
+//     res.send(`Hello bhai ${name}`)
+    
+// })
 
 
 
