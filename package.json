@@ -12,10 +12,12 @@
   },
   "license": "ISC",
   "author": "Abhijay and Anish Raja",
+
   "main": "server.js",
   "type": "module",
 
   "scripts": {
+   
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js"
 
