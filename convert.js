@@ -40,8 +40,8 @@ function convertMP3(inputFile, bitrate) {
       console.error(`Error during conversion: ${err.message}`);
     });
 }
-const inputFile = path.join("assets/music/Dr. Dre - Still D.R.E. ft. Snoop Dogg.mp3")
-function convertandserve(inputFile){
+
+export async function generateBitrates(inputFile){
   convertMP3(inputFile, '128k');
   convertMP3(inputFile, '192k');
   convertMP3(inputFile, '256k');
@@ -49,5 +49,9 @@ function convertandserve(inputFile){
 
 
 }
-convertandserve(inputFile);
+
+const inputFile = path.join("assets/music/Dr. Dre - Still D.R.E. ft. Snoop Dogg.mp3")
+
+
+generateBitrates(inputFile);
 // Example usage: Convert an MP3 to 128k bitrate

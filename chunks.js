@@ -3,6 +3,7 @@ import fs from 'fs-extra'
 import path from 'path'
 import ffmpeg from 'fluent-ffmpeg'
 
+import generateBitrate from 'convert.js'
 
 const app = express();
 
