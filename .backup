@@ -1,0 +1,163 @@
+import express from 'express';
+import fs from 'fs-extra';
+import path from 'path';
+import ffmpeg from 'fluent-ffmpeg';
+import { setInterval } from 'timers';
+
+// Create the express app
+const app = express();
+
+const mp3FilePath = path.join("assets/music/Dr. Dre - Still D.R.E. ft. Snoop Dogg.mp3");
+const cacheDir = path.join('cache');
+fs.ensureDirSync(cacheDir);
+
+const chunkSize = 8; // Chunk size in seconds
+let songQueue = [mp3FilePath];  // Future song queue
+let currentSong = null;
+let currentTime = 0;
+let chunkLoadingInProgress = false;  // To avoid overlapping chunk generation
+let clients = []; // Track connected clients for synchronization
+
+// Function to get song duration
+const getSongDuration = (songPath) => {
+    return new Promise((resolve, reject) => {
+        ffmpeg.ffprobe(songPath, (err, metadata) => {
+            if (err) reject(err);
+            resolve(metadata.format.duration);
+        });
+    });
+};
+
+// Function to generate the chunk and cache it
+const generateChunk = (songPath, startTime, chunkIndex) => {
+    const chunkFilePath = path.join(cacheDir, `chunk_${chunkIndex}.mp3`);
+    return new Promise((resolve, reject) => {
+        ffmpeg(songPath)
+            .setStartTime(startTime)
+            .duration(chunkSize)
+            .audioCodec('libmp3lame')
+            .format('mp3')
+            .output(chunkFilePath)
+            .on('end', () => {
+                resolve(chunkFilePath);
+            })
+            .on('error', reject)
+            .run();
+    });
+};
+
+// Function to handle chunk loading
+const loadNextChunk = async () => {
+    if (chunkLoadingInProgress) return;  // Avoid overlapping chunk generation
+    chunkLoadingInProgress = true;
+
+    const currentChunkStart = Math.floor(currentTime / chunkSize) * chunkSize;
+    const chunkIndex = Math.floor(currentChunkStart / chunkSize);
+
+    const chunkFilePath = path.join(cacheDir, `chunk_${chunkIndex}.mp3`);
+    if (!fs.existsSync(chunkFilePath)) {
+        console.log(`Generating chunk ${chunkIndex} starting at ${currentChunkStart}s...`);
+        try {
+            await generateChunk(currentSong, currentChunkStart, chunkIndex);
+            console.log(`Chunk ${chunkIndex} generated.`);
+        } catch (err) {
+            console.error('Error generating chunk:', err);
+        }
+    }
+
+    chunkLoadingInProgress = false;
+};
+
+// Broadcast function to notify clients of current playback time
+const broadcastTimeUpdate = () => {
+    clients.forEach(client => {
+        if (client.res.writable) {
+            client.res.write(`data: ${currentTime}\n\n`);
+        }
+    });
+};
+
+// Start playback and set interval for time tracking
+const startPlayback = () => {
+    currentSong = songQueue[0];  // Get the current song (hardcoded for now)
+    getSongDuration(currentSong)
+        .then((duration) => {
+            console.log(`Song duration: ${duration}s`);
+            setInterval(() => {
+                currentTime += 1;  // Increment playback time by 1 second
+                loadNextChunk();  // Check and load the next chunk as the time progresses
+                broadcastTimeUpdate();  // Notify clients of the time update
+            }, 1000);
+        })
+        .catch((err) => {
+            console.error('Error getting song duration:', err);
+        });
+};
+
+// Serve the stream request for live radio-like experience
+app.get('/stream', (req, res) => {
+    if (!currentSong) {
+        return res.status(404).send('No song is currently playing');
+    }
+
+    // Set headers to indicate this is an audio stream
+    res.setHeader('Content-Type', 'audio/mp3');
+    res.setHeader('Transfer-Encoding', 'chunked'); // Keep the connection open
+    res.setHeader('Cache-Control', 'no-cache'); // Disable caching
+
+    // Function to handle chunk streaming
+    const streamChunks = () => {
+        let chunkIndex = Math.floor(currentTime / chunkSize); // Calculate chunk index
+
+        const sendChunk = () => {
+            const chunkFilePath = path.join(cacheDir, `chunk_${chunkIndex}.mp3`);
+            
+            // Check if the chunk exists in cache
+            if (fs.existsSync(chunkFilePath)) {
+                const readStream = fs.createReadStream(chunkFilePath);
+
+                // Pipe the chunk to the response (client)
+                readStream.pipe(res, { end: false }); // Prevent closing the connection after this chunk
+                readStream.on('end', () => {
+                    // Once the chunk is sent, move to the next chunk
+                    chunkIndex++;
+                    sendChunk(); // Recursively send the next chunk
+                });
+            } else {
+                console.log(`Chunk ${chunkIndex} is not available yet`);
+                // If the chunk is not available, retry after a short delay
+                setTimeout(sendChunk, 1000); // Retry after 1 second
+            }
+        };
+
+        sendChunk(); // Start sending the first chunk
+    };
+
+    // Start streaming chunks
+    streamChunks();
+});
+
+
+// Stream synchronization endpoint
+app.get('/sync', (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('Transfer-Encoding', 'chunked');
+
+    res.write('data: connected\n\n'); // Confirm connection
+
+    // Add this client to the list for synchronization
+    clients.push({ res });
+
+    // Remove client from the list when they disconnect
+    req.on('close', () => {
+        clients = clients.filter(client => client.res !== res);
+    });
+});
+
+const port = 3000;
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+    startPlayback();  // Start playback when the server is up
+});
