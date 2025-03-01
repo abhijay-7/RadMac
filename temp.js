@@ -32,6 +32,7 @@ chunkLoadingInProgress["192"] = false;
 chunkLoadingInProgress["256k"] = false;
 chunkLoadingInProgress["320k"] = false;
 let clients = []; // Track connected clients for synchronization
+let preloading = false
 
 // prechunking
 const preloadChunks = async (songPath) => {
@@ -126,9 +127,10 @@ const startPlayback = async(index=0) => {
     await updateSongQueue()
     currentSong = songQueue[index];  
     console.log(`playing : ${currentSong}`);
-    preloadChunks(currentSong);
+    if(index==0)preloadChunks(currentSong);
     currentTime = 0;
     currentChunk=0;
+    preloading = false
 
     getSongDuration(currentSong)
         .then((duration) => {
@@ -143,6 +145,12 @@ const startPlayback = async(index=0) => {
                     clearInterval(interval_id);
                     console.log("hi", maxChunks);
                     startPlayback(index);
+                    
+                    
+                }
+                if(currentChunk>maxChunks*0.8  && !preloading){
+                   preloading = true;
+                    preloadChunks(songQueue[(index+1)%songQueue.length]);
                     
                     
                 }
