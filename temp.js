@@ -3,6 +3,8 @@ import fs from 'fs-extra';
 import path from 'path';
 import ffmpeg from 'fluent-ffmpeg';
 import { clearInterval, setInterval } from 'timers';
+import {getFilesInDirectory } from './utilities/file_utils.js'
+import { getSongDuration } from './utilities/ffmpeg_utils.js';
 
 
 
@@ -38,11 +40,12 @@ const preloadChunks = async (songPath) => {
         const totalChunks = Math.ceil(totalDuration / chunkSize);  
 
         let chunkPromises = [];
+        console.log(`preloading: ${globalPrevIndex}`)
         
-        for (let i = globalPrevIndex; i < totalChunks; i++) {
+        for (let k = globalPrevIndex,i=0; k < globalPrevIndex+totalChunks; i++,k++) {
             for(let j=0; j<4;j++){
                     const startTime = i * chunkSize;
-                    const chunkFilePath = path.join(cacheDir, `chunk_${i}_${bits[j]}.mp3`);
+                    const chunkFilePath = path.join(cacheDir, `chunk_${k}_${bits[j]}.mp3`);
         
                     // Cache the chunk
                     chunkPromises.push(
@@ -78,81 +81,36 @@ const updateSongQueue = async() =>{
     console.log(songQueue);
 }
 
-const getFilesInDirectory = (dirPath) => {
-    return new Promise((resolve, reject) => {
-      
-      fs.readdir(dirPath, (err, files) => {
-        if (err) {
-          reject(`Error reading directory: ${err}`);
-        } else {
-        
-          const filePaths = files.map(file => path.join(dirPath, file))
-                                 .filter(filePath => fs.statSync(filePath).isFile());
-          resolve(filePaths); 
-        }
-      });
-    });
-  };
-  
 
-const getSongDuration = (songPath) => {
-    return new Promise((resolve, reject) => {
-        ffmpeg.ffprobe(songPath, (err, metadata) => {
-            if (err) reject(err);
-            resolve(metadata.format.duration);
-        });
-    });
-};
+// // Function to handle chunk loading, for live data scenario
+// const loadNextChunk = async (bitrate="128k") => {
+//     if (chunkLoadingInProgress[bitrate]) return;  // Avoid overlapping chunk generation
+//     chunkLoadingInProgress[bitrate] = true;
 
-// Function to generate the chunk and cache it
-const generateChunk = (songPath, startTime, chunkIndex, bitrate="128k") => {
-       
-    const chunkFilePath = path.join(cacheDir, `chunk_${chunkIndex}_${bitrate}.mp3`);
-    return new Promise((resolve, reject) => {
-        ffmpeg(songPath)
-            .setStartTime(startTime)
-            .duration(chunkSize)
-            .audioCodec('libmp3lame')
-            .audioBitrate(bitrate)
-            .format('mp3')
-            .output(chunkFilePath)
-            .on('end', () => {
-                resolve(chunkFilePath);
-            })
-            .on('error', reject)
-            .run();
-    });
-};
+//     const currentChunkStart = Math.floor(currentTime / chunkSize) * chunkSize;
+//     const chunkIndex = Math.floor(currentChunkStart / chunkSize);
 
-// Function to handle chunk loading, for live data scenario
-const loadNextChunk = async (bitrate="128k") => {
-    if (chunkLoadingInProgress[bitrate]) return;  // Avoid overlapping chunk generation
-    chunkLoadingInProgress[bitrate] = true;
-
-    const currentChunkStart = Math.floor(currentTime / chunkSize) * chunkSize;
-    const chunkIndex = Math.floor(currentChunkStart / chunkSize);
-
-    const chunkFilePath = path.join(cacheDir, `chunk_${chunkIndex}_${bitrate}.mp3`);
+//     const chunkFilePath = path.join(cacheDir, `chunk_${chunkIndex}_${bitrate}.mp3`);
     
-    if (!fs.existsSync(chunkFilePath)) {
-        console.log(`loadnextCHunk:${chunkFilePath} `);
-        console.log(`Generating chunk ${chunkIndex} starting at ${currentChunkStart}s...`);
-        try {
-            await generateChunk(currentSong, currentChunkStart, chunkIndex,bitrate);
-            console.log(`Chunk ${chunkIndex} generated.`);
-        } catch (err) {
-            console.error('Error generating chunk:', err);
-        }
-    }
+//     if (!fs.existsSync(chunkFilePath)) {
+//         console.log(`loadnextCHunk:${chunkFilePath} `);
+//         console.log(`Generating chunk ${chunkIndex} starting at ${currentChunkStart}s...`);
+//         try {
+//             await generateChunk(currentSong, currentChunkStart, chunkIndex,bitrate);
+//             console.log(`Chunk ${chunkIndex} generated.`);
+//         } catch (err) {
+//             console.error('Error generating chunk:', err);
+//         }
+//     }
 
-    chunkLoadingInProgress[bitrate] = false;
-};
-const loadNextChunks = async() =>{
-    for(let j=0; j<4;j++){
-        loadNextChunk(bits[j]);
-    }
+//     chunkLoadingInProgress[bitrate] = false;
+// };
+// const loadNextChunks = async() =>{
+//     for(let j=0; j<4;j++){
+//         loadNextChunk(bits[j]);
+//     }
     
-}
+// }
 
 // Broadcast function to notify clients of current playback time
 const broadcastTimeUpdate = () => {
@@ -170,7 +128,7 @@ const startPlayback = async(index=0) => {
     console.log(`playing : ${currentSong}`);
     preloadChunks(currentSong);
     currentTime = 0;
-    let currentChunk=0;
+    currentChunk=0;
 
     getSongDuration(currentSong)
         .then((duration) => {
@@ -180,11 +138,12 @@ const startPlayback = async(index=0) => {
                 currentTime += 1;
                 if(currentTime%chunkSize == 0)currentChunk++;
                 if(currentChunk>maxChunks){
-                    index +=1;
+                    index = (index+1)%songQueue.length;
                     globalPrevIndex += maxChunks; 
                     clearInterval(interval_id);
-                    startPlayback(index);
                     console.log("hi", maxChunks);
+                    startPlayback(index);
+                    
                     
                 }
                 
