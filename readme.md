@@ -35,7 +35,7 @@ mkdir assets/music
 
 ### 3. Start the Backend
 ```bash
-node run temp.js
+node  temp.js
 ```
 
 ### 4. Start the Frontend
