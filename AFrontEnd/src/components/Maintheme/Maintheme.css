@@ -1,22 +1,15 @@
-body { 
-    overflow:hidden;
-    height:100vh;
-    width:100vw;
-    background:#000;
+.canvas {
+  position: absolute; /* Position canvas relative to parent */
+  /* top: 0;             Position at the top */
+  right: 30vw;           /* Position at the right */
+  z-index: 1;
+  margin: 10;   
+  background-color: black;     /* Make sure it's on top of other content */
+}
+@media (max-width: 1500px) {
+  .canvas {
+      width: 95%; /* Adjusted width for small and medium screens */
+      transform: translateX(25%);
   }
-  #logo-codepen {
-    --dim:30px;
-    position:fixed;
-    bottom:var(--dim);
-    right:var(--dim);
-    height:var(--dim);
-    width:var(--dim);
-    text-shadow:0px 0px 30px #ffdd40;
-    & svg path {
-      transition:all 2s ease;
-      fill:none;
-    }
-    &:hover svg path {
-      fill:none;
-    }
-  }
+  
+}

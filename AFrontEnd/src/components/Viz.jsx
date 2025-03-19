@@ -1,68 +1,47 @@
-import React, { useRef, useState, useEffect } from "react";
-
-// import React, {useEffect} from "react";
+import React, {useEffect} from "react";
 
 import * as THREE from 'three';
-import SceneInit from './../../lib/SceneInit'
-import './Maintheme.css'
+import SceneInit from './../lib/SceneInit'
 
-const MainTheme = ({bgColorHex}) => {
-  
-    useEffect(() => {
-      const test = new SceneInit('myThreeJsCanvas',400,400, bgColorHex);
-      test.initialize();
-      
-  
-      const uniforms = {
-        u_time: {type: 'f', value: 0.0},
-        u_frequency: {type: 'f', value: 0.0},
-        u_red: {type: 'f', value: 0.190},
-        u_green: {type: 'f', value: 0.60},
-        u_blue: {type: 'f', value: 1.0}
-      }
-      const icosGeo = new THREE.IcosahedronGeometry(5,7);
-      const mat = new THREE.ShaderMaterial({
-        uniforms,
-        vertexShader: vertexShader,
-        fragmentShader: fragmentShader
-      });
-      test.uniforms = uniforms;
-      // const mat = new THREE.MeshNormalMaterial();
-      const mesh = new THREE.Mesh(icosGeo, mat);
-      mesh.material.wireframe = true;
+
+function Viz (height, width){
+  useEffect(() => {
+    const test = new SceneInit('myThreeJsCanvas',400,400);
+    test.initialize();
     
-      
-      test.scene.add(mesh);
-      test.mesh = mesh;
-      test.animate();
-    }, []);
 
+    const uniforms = {
+      u_time: {type: 'f', value: 0.0},
+      u_frequency: {type: 'f', value: 0.0},
+      u_red: {type: 'f', value: 0.190},
+      u_green: {type: 'f', value: 0.60},
+      u_blue: {type: 'f', value: 1.0}
+    }
+    const icosGeo = new THREE.IcosahedronGeometry(5,7);
+    const mat = new THREE.ShaderMaterial({
+      uniforms,
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader
+    });
+    test.uniforms = uniforms;
+    // const mat = new THREE.MeshNormalMaterial();
+    const mesh = new THREE.Mesh(icosGeo, mat);
+    mesh.material.wireframe = true;
+  
+    
+    test.scene.add(mesh);
+    test.mesh = mesh;
+    test.animate();
+  }, []);
 
   return (
-    <>
-      <div>
-        {/* <h1>Continuous Animation with Music</h1> */}
-        {/* <canvas
-          ref={canvasRef}
-          width="500"
-          height="500"
-          style={{ border: "1px solid black" }}
-        ></canvas> */}
-        <canvas id="myThreeJsCanvas" className="canvas" />
-
-        {/* <audio ref={audioRef} src="path_to_your_music.mp3" preload="auto" /> */}
-        {/* <button onClick={() => setIsPlaying((prev) => !prev)}>
-          {isPlaying ? "Pause" : "Play"}
-        </button> */}
-      </div>
-      
-    </>
+    <div> 
+      <canvas id="myThreeJsCanvas" />
+    </div>
   );
-};
+}
 
-export default MainTheme;
-
-
+export default Viz;
 
 
 const vertexShader = 

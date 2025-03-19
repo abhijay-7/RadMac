@@ -1,0 +1,129 @@
+.song-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Align items vertically in the center */
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Subtle gradient background */
+    padding: 10px; /* Add some padding around the content */
+    gap: 10px; /* Add gap between image and text */
+    animation: bgAnimation 10s ease infinite; /* Add background animation */
+}
+
+@keyframes bgAnimation {
+    0% {
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Initial gradient */
+    }
+    50% {
+        background: linear-gradient(135deg, #e0eafc, #cfdef3); /* Mid gradient */
+    }
+    100% {
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Back to initial gradient */
+    }
+}
+
+.cover-container {
+    aspect-ratio: 1 / 1; /* Ensure the container is square */
+    height: 100%; /* Take full height of the parent */
+    max-height: 250px; /* Set maximum height */
+    overflow: hidden;
+    border-radius: 10px;
+    flex-shrink: 0; /* Prevent the image container from shrinking */
+}
+
+.cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure the image covers the square area */
+}
+
+.text-container {
+    flex-grow: 1; /* Allow the text container to take up remaining space */
+    padding: 10px; /* Add padding inside the text container */
+    text-align: left; /* Align text to the left */
+    overflow: hidden; /* Hide overflow for sliding animation */
+    white-space: nowrap; /* Prevent text from wrapping */
+    height: 100%; /* Match the height of the cover container */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center text vertically */
+    background: linear-gradient(135deg, #6a11cb, #2575fc); /* Cool gradient background */
+    color: white; /* White text for better contrast */
+    border-radius: 8px; /* Rounded corners for the text container */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.song-name,
+.artist-name,
+.album-name {
+    margin: 2px 0; /* Reduce margin for tighter spacing */
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.song-name {
+    font-size: 1.5em;
+    color: inherit; /* Inherit white color from parent */
+    display: inline-block; /* Required for sliding animation */
+    padding-left: 100%; /* Start text offscreen */
+    animation: slideText 10s linear infinite; /* Add sliding animation */
+}
+
+.artist-name,
+.album-name {
+    font-size: 1em;
+    color: rgba(255, 255, 255, 0.8); /* Slightly transparent white */
+}
+
+.song-box-container {
+    width: 50%; /* Default width for larger screens */
+}
+
+@media (max-width: 1000px) {
+    .song-box-container {
+        width: 95%; /* Adjusted width for small and medium screens */
+    }
+    .cover-container{
+        height: 30%;
+        max-height: 100px;
+    }
+}
+
+@media ((min-width:1001px)  and (max-width: 1600px) ){
+    .song-box-container {
+        width: 65%; /* Adjusted width for small and medium screens */
+    }
+    .cover-container{
+        /* height: 30%; */
+        max-height: 100px;
+    }
+}
+
+.layout-songText{
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.layout-songText:hover{
+    animation: slideTextL 10s linear infinite;
+}
+
+@keyframes slideText {
+    0% {
+        transform: translateX(0%); /* Start text offscreen */
+    }
+    100% {
+        transform: translateX(-90%); /* Slide text to the left */
+    }
+}
+
+
+@keyframes slideTextL {
+    0% {
+        transform: translateX(0%); /* Start text offscreen */
+    }
+    100% {
+        transform: translateX(-80%); /* Slide text to the left */
+    }
+}

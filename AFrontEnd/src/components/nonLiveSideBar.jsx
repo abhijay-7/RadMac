@@ -3,12 +3,13 @@ import axios from "axios";
 import Fuse from 'fuse.js';
 
 
+
 import MainTheme from "./Maintheme/MainTheme";
-import { BiSolidUpvote } from "react-icons/bi";
+import { BiSolidUpvote, BiPlay  } from "react-icons/bi";
 import './SongBox.css';
 import './Layout.css';
 
-const Sidebar = () => {
+const NonLiveSidebar = ({onSongClick}) => {
 
   const topbarHeight = '60px';
   const style = {
@@ -345,11 +346,17 @@ const Sidebar = () => {
                     </span>
                     <button
                       className="p-1 pr-3 pl-3  hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                      onClick={() => !checkVal && handleupvote(item.id)}
+                      onClick={()=>{
+                        
+                        console.log("nlsidebar click",item.id )
+                        onSongClick(item.id)
+                        
+                     }}
+
                     >
-                      <BiSolidUpvote />
+                      <BiPlay />
                     </button>
-                    <p>{item.vote}</p>
+                   
 
                   </a>
                 </li>
@@ -364,4 +371,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default NonLiveSidebar;

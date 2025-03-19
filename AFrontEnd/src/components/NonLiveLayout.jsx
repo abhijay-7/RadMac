@@ -8,10 +8,12 @@ import LiveScreen from './LiveScreen'
 import TopBar from './topbar/TopBar'
 import FavButton from './topbar/FavButton'
 import './Layout.css'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import NonLiveScreen from './NonLiveScreen'
 
-const Layout = () => {
-  const navigate = useNavigate()
+
+const NonLiveLayout = () => {
+    const navigate = useNavigate();
   const bgColor = 'bg-pink-100';
   const bgColorHex = '#000000'
 
@@ -22,8 +24,7 @@ const Layout = () => {
     '--ptop': topbarHeight
   };
   const handleFavButtonClick = () => {
-    navigate("/nonLive");
-    alert("hi")
+    navigate('/Live')
 };
 
   const apiUrl = '/player/LiveSongMeta/';
@@ -31,10 +32,10 @@ const Layout = () => {
     <>
     <TopBar FavButton={<FavButton  favbgColor={'bg-cyan-50'} favOnClick={handleFavButtonClick} />}  height={topbarHeight}/>
     <div className='layout-body' style={style}>
-    <LiveScreen  bgColor={bgColor} bgColorHex={bgColorHex}  on />
+    <NonLiveScreen  bgColor={bgColor} bgColorHex={bgColorHex}  />
     </div>
     </>
   )
 }
 
-export default Layout
+export default NonLiveLayout;

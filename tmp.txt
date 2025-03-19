@@ -222,7 +222,42 @@ app.get('/stream/:bitrate', (req, res) => {
 
 });
 
+app.get('/stream', (req, res) => {
+    if (!currentSong) {
+        return res.status(404).send('No song is currently playing');
+    }
 
+    res.setHeader('Content-Type', 'audio/mp3');
+    res.setHeader('Transfer-Encoding', 'chunked');
+    res.setHeader('Cache-Control', 'no-cache');
+
+    const streamChunks = () => {
+        let chunkIndex = Math.floor(currentTime / chunkSize); 
+
+        const sendChunk = (bitrate="320k") => {
+            const chunkFilePath = path.join(cacheDir, `chunk_${chunkIndex}_${bitrate}.mp3`);
+            
+            
+            if (fs.existsSync(chunkFilePath)) {
+                const readStream = fs.createReadStream(chunkFilePath);
+
+                readStream.pipe(res, { end: false }); // Prevent closing the connection after this chunk
+                readStream.on('end', () => {
+                  
+                    chunkIndex++;
+                    sendChunk("320k"); // Recursively send the next chunk
+                });
+            } else {
+                console.log(`Chunk ${chunkIndex} is not available yet`);
+                setTimeout(()=>sendChunk(bitrate), 1000); 
+            }
+        };
+
+        sendChunk("320k"); 
+    };
+
+    streamChunks("320k");
+});
 
 // Stream synchronization endpoint
 app.get('/sync', (req, res) => {
