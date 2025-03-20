@@ -9,7 +9,7 @@ const ProgressBar = ({ progress, duration, onSeek }) => {
   };
 
   return (
-    <div className="w-full mt-2">
+    <div className="w-full max-w-screen-sm mt-2">
       {/* Clickable Progress Bar */}
       <div
         className="w-full h-2 bg-gray-200 rounded-full cursor-pointer"

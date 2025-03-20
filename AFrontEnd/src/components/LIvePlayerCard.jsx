@@ -7,9 +7,8 @@ import axios from "axios";
 import NonLivePlayer from './nonLivePlayer';
 import ProgressBar from './progressBar';
 import { FaPause, FaPlay } from "react-icons/fa";
-const PLayerCard = () => {
-  let song = useParams()
-  song =song.id
+const LivePlayerCard = () => {
+
   const [songData, setSongData] = useState(null);
   const [progress, setProgress] = useState(0);
   const audioRef = useRef(null);
@@ -17,7 +16,7 @@ const PLayerCard = () => {
   const navigate = useNavigate()
 
 
-  const Url = `/hi/get-song/${song}`
+  const Url = `/hi/stream/320k`
   const hostIp = import.meta.env.VITE_HOST_IP;
      const playerPort = import.meta.env.VITE_PLAYER_PORT
      const [bitrate, setBitrate] = useState('320k');
@@ -31,11 +30,11 @@ const PLayerCard = () => {
  
      useEffect(() => {
       // Update stream URL when song changes
-      const newStreamUrl = `/hi/get-song/${song}`;
+      const newStreamUrl = `/hi/stream/320k`;
       setStreamUrl(newStreamUrl);
   
       console.log("Updated stream URL:", newStreamUrl);
-    }, [song]); // Runs every time `song` changes
+    }, []); // Runs every time `song` changes
   
  
 
@@ -46,7 +45,7 @@ const PLayerCard = () => {
  
 
     useEffect(() => {
-      const metaUrl = `/hi/SongMeta/${song}`; // Dynamically create meta URL
+      const metaUrl = `/hi/LiveSongMeta/`; // Dynamically create meta URL
     
       console.log(metaUrl, "nlSbox");
     
@@ -63,7 +62,7 @@ const PLayerCard = () => {
       };
     
       fetchSong();
-    }, [song]); // Re-run when `song` changes
+    }, []); // Re-run when `song` changes
     
 
     const imgUrls = [
@@ -113,7 +112,7 @@ const PLayerCard = () => {
     if (audioRef.current) {
       const currentTime = audioRef.current.currentTime;
       const duration = audioRef.current.duration;
-      setProgress((currentTime / duration) * 100);
+      setProgress(currentTime);
     }
   };
 
@@ -124,35 +123,8 @@ const PLayerCard = () => {
     }
   };
 
-  const handleNext = () => {
-    const nextSong = parseInt(song) + 1;  
-    navigate(`/play/${nextSong}`);  
-    setProgress(0);  
-  //there should be some dely to load the song on react 
-    setTimeout(() => {
-      if (audioRef.current) {
-        audioRef.current.load();  // Reload 
-        audioRef.current.play();  // Play 
-        setIsPlaying(true);
-      }
-    }, 500);  // Small delay to allow React to update state
-  };
+
   
-  const handlePre = () => {
-    let prevSong = parseInt(song) -1;  
-    {(prevSong<0)?prevSong=0:prevSong}
-    console.log("prevsong" , prevSong)
-    navigate(`/play/${prevSong}`);  
-    setProgress(0);  
-  //there should be some dely to load the song on react 
-    setTimeout(() => {
-      if (audioRef.current) {
-        audioRef.current.load();  // Reload 
-        audioRef.current.play();  // Play 
-        setIsPlaying(true);
-      }
-    }, 500);  //  delay 500
-  };
   
 
   // Seek When Clicking Progress Bar
@@ -197,7 +169,7 @@ const PLayerCard = () => {
       
     <div class="my-10 flex justify-center items-center">
    
-      <button onClick={handlePre} class="p-3 mx-8 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none">
+      <button  class="p-3 mx-8 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none">
         <svg width="64px" height="64px" viewBox="0 0 24 24" class="w-4 h-4 text-gray-600" fill="none" xmlns="http://www.w3.org/2000/svg" transform="matrix(-1, 0, 0, 1, 0, 0)">
           <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
           <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -213,7 +185,7 @@ const PLayerCard = () => {
         isPlaying?<FaPause fill='black'/>:<  FaPlay fill='black'/>
       }
       </button>
-      <button  onClick={handleNext} class="p-3 mx-8 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none">
+      <button  class="p-3 mx-8 rounded-full bg-gray-200 hover:bg-gray-300 focus:outline-none">
         <svg width="64px" height="64px" viewBox="0 0 24 24" class="w-4 h-4 text-gray-600" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
           <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -237,4 +209,4 @@ const PLayerCard = () => {
   )
 }
 
-export default PLayerCard
+export default LivePlayerCard
