@@ -1,9 +1,9 @@
 import React from 'react'
+import LikedSongs from './LikedSongs'
 
 const Playlist = () => {
   return (
-    
-    <div>Playlist</div>
+<LikedSongs/>
   )
 }
 

@@ -45,6 +45,7 @@ import PLayerCard from './components/PLayerCard.jsx'
 const router = createBrowserRouter(
   createRoutesFromElements(
   <Route path='/' element={<LayoutTemp/>}>
+    
         <Route path ='NonLive' element={<NonLive/>}/>
         <Route path='Live' element={< Live />} />
         <Route path='home' element={<Home/>}/>
