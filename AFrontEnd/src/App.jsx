@@ -4,8 +4,10 @@ import Layout from './components/Layout';
 
 function App() {
   return (
+    <>
+    </>
     
-     <Layout  className="bg-black"></Layout>
+    //  <Layout  className="bg-black"></Layout>
   );
 }
 
