@@ -4,14 +4,13 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} from 'react-router-dom'
-import NonLive from './nonLive.jsx'
-import Live from './Live.jsx'
 import Home from './components/Home.jsx'
 import Search from './components/Tabcompo/Search.jsx'
 import Playlist from './components/Tabcompo/Playlist.jsx'
-import LikedSongs from './components/Tabcompo/LikedSongs.jsx'
 import LayoutTemp from './components/LayoutTemp.jsx'
 import PLayerCard from './components/PLayerCard.jsx'
+import LiveSongs from './components/Tabcompo/LiveSongs.jsx'
+import Favourite from './components/Tabcompo/Favourite.jsx'
 
 
 
@@ -38,22 +37,16 @@ import PLayerCard from './components/PLayerCard.jsx'
 
 
 
-
-
-
-
 const router = createBrowserRouter(
   createRoutesFromElements(
   <Route path='/' element={<LayoutTemp/>}>
-    
-        <Route path ='NonLive' element={<NonLive/>}/>
-        <Route path='Live' element={< Live />} />
+         <Route path ='' element={<Home/>}/>
         <Route path='home' element={<Home/>}/>
         <Route path='search' element={<Search/>}/>
-        <Route path='playlist' element={<Playlist/>}/>
-        <Route path='likedsongs' element={<LikedSongs/>}/>
+        <Route path='favourites' element={<Favourite/>}/>
+        <Route path='liveSongs' element={<LiveSongs/>}/>
         <Route path='play/:id' element={<PLayerCard/>}/>
-
+        <Route path='playlist/:id' element={<Playlist/>}/>
 
 
    </Route>

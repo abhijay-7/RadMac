@@ -1,8 +1,9 @@
-import React from 'react';
+import React from 'react'
 
-const LikedSongs = () => {
+const ComingSoon = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 to-indigo-800 text-white">
+    <>
+     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 to-indigo-800 text-white">
       <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg shadow-2xl p-12 mx-4 hover:shadow-3xl transition-all duration-500">
         {/* Image */}
         <img
@@ -26,7 +27,8 @@ const LikedSongs = () => {
         <p className="mt-8 text-sm text-gray-300">Developers are working on it...</p>
       </div>
     </div>
-  );
-};
+    </>
+  )
+}
 
-export default LikedSongs;
+export default ComingSoon

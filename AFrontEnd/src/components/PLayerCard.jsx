@@ -179,7 +179,7 @@ const PLayerCard = () => {
     <>
     
     {/* <!-- component --> */}
-<div class=" px-4 justify-center items-center h-screen">
+<div class=" px-4 flex justify-center items-center h-screen">
   <div class="bg-gray-900 p-8 rounded-lg shadow-md sm:h-[90%] md:w-64 sm:min-w-8 ">
     {/* <!-- Album Cover --> */}
     <img  src={imgUrls[getRandomValue(id, imgUrls.length)]} alt="idk - Highvyn, Taylor Shin" class="w-80 h-80 mx-auto rounded-lg mb-4 mt-8 shadow-lg shadow-teal-50"/>

@@ -35,7 +35,7 @@ const Tabs = () => {
           </li>
           <li className="flex-1">
             <Link
-              to="/playlist"
+              to="/favourites"
               className={`w-full block text-center px-4 py-3  hover:text-white  rounded-xl transition-all duration-200 ${
                 location.pathname === '/playlist'
                   ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
@@ -47,7 +47,7 @@ const Tabs = () => {
           </li>
           <li className="flex-1">
             <Link
-              to="/likedsongs"
+              to="/liveSongs"
               className={`w-full block text-center px-4 py-3  hover:text-white  rounded-xl transition-all duration-200 ${
                 location.pathname === '/likedsongs'
                   ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
