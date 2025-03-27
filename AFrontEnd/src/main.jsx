@@ -12,6 +12,8 @@ import PLayerCard from './components/PLayerCard.jsx'
 import LiveSongs from './components/Tabcompo/LiveSongs.jsx'
 import Favourite from './components/Tabcompo/Favourite.jsx'
 import ComingSoon from './components/ComingSoon.jsx'
+import MeetTheDeveloper from './components/Meetdev/MeetDev.jsx'
+import Team from './components/Meetdev/Team.jsx'
 
 
 
@@ -49,6 +51,9 @@ const router = createBrowserRouter(
         <Route path='play/:id' element={<PLayerCard/>}/>
         <Route path='playlist/:id' element={<Playlist/>}/>
         <Route path='/comingsoon' element={<ComingSoon/>}/>
+        <Route path='/team' element={<Team/>}/>
+        <Route path='/team/:id' element={<MeetTheDeveloper/>}/>
+
 
 
    </Route>
