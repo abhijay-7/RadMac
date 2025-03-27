@@ -2,25 +2,30 @@ import React from 'react'
 import Tab from './Tabcompo/Tab'
 import { Link } from 'react-router';
 import playlists from './Playlistcompo/GenrePlaylist';
+import Category from './Playlistcompo/Category';
+import PlaylistGrid from './HomePage/PlaylistGrid';
+import PlaylistSlider from './HomePage/PlaylistSlider';
 
 const Home = () => {
+
 
   
 
 
   return (
     <>
-   
+    <PlaylistGrid/>
+    <PlaylistSlider/>
 <main class="grid place-items-center min-h-screen bg-gradient-to-t from-blue-200 to-indigo-900 p-5">
   <div>
     <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-200 mb-5">Made for you</h1>
     <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
      {
-      playlists.map((item , index)=>(
+      Category.map((item , index)=>(
         <>
          <div  key={index} class="bg-gray-900 shadow-lg rounded p-3">
         <div class="group relative">
-          <img class="w-full md:w-72 block rounded" src="https://upload.wikimedia.org/wikipedia/en/f/f1/Tycho_-_Epoch.jpg" alt="" />
+          <img class="w-full md:w-72 block rounded" src={item.image} alt="" />
           <div class="absolute bg-black rounded bg-opacity-0 group-hover:bg-opacity-60 w-full h-full top-0 flex items-center group-hover:opacity-100 transition justify-evenly">
             <button class="hover:scale-110 text-white opacity-0 transform translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 transition">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">

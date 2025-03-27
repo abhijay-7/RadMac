@@ -16,7 +16,7 @@ const ComingSoon = () => {
         <h1 className="text-6xl font-bold mb-4 mt-6 animate-pulse">Coming Soon</h1>
 
         {/* Description */}
-        <p className="text-xl mb-8">We're working hard to bring you something amazing. Stay tuned!</p>
+        {/* <p className="text-xl mb-8">We're working hard to bring you something amazing. Stay tuned!</p> */}
 
         {/* Loader */}
         {/* <div className="flex justify-center">
@@ -24,7 +24,7 @@ const ComingSoon = () => {
         </div> */}
 
         {/* Developer Text */}
-        <p className="mt-8 text-sm text-gray-300">Developers are working on it...</p>
+        <p className="mt-8 text-sm text-gray-300">We are working on it...</p>
       </div>
     </div>
     </>
