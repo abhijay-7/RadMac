@@ -1,7 +1,0 @@
-node_modules/
-AFrontEnd/node_modules/
-cache/*
-assets/currentStream/*
-assets/music/
-.*
-
