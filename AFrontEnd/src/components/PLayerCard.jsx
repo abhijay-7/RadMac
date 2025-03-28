@@ -75,12 +75,22 @@ const PLayerCard = () => {
   
     ];
   
-    const getRandomValue = (inputNumber, range) => {
-      // Use a deterministic approach for generating random number (e.g., using hash)
-      const seed = inputNumber; // In practice, you could apply more complex logic for this
-      const randomValue = (seed * 9304 + 49297) % 17; // A simple linear congruential generator
-      const normalizedValue = randomValue / 17; // Normalize to [0, 1]
-      return Math.floor(normalizedValue * range); // Map it to the given range
+    const getRandomValue = (input, range) => {
+      // Convert any input to string
+      const inputStr = String(input);
+      
+      // Simple hash function to convert string to numeric seed
+      let hash = 0;
+      for (let i = 0; i < inputStr.length; i++) {
+        const char = inputStr.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash |= 0; // Convert to 32-bit integer
+      }
+      hash = Math.abs(hash);
+    
+      // Deterministic pseudo-random number generation
+      const randomValue = (hash * 9301 + 49297) % range;
+      return Math.abs(randomValue);
     };
   
     if (!songData) {

@@ -3,4 +3,5 @@ AFrontEnd/node_modules/
 cache/*
 assets/currentStream/*
 assets/music/
+.*
 

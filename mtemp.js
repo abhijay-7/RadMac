@@ -1,3 +1,8 @@
+
+import 'dotenv/config';
+import multer from 'multer';
+import mongoose from 'mongoose';
+import { GridFSBucket, ObjectId } from 'mongodb';
 import express from 'express';
 import fs from 'fs-extra';
 import path from 'path';
@@ -8,12 +13,138 @@ import { getSongDuration } from './utilities/ffmpeg_utils.js';
 import * as mm from 'music-metadata'
 import bodyParser from 'body-parser'
 import cors from 'cors';
-import multer from 'multer';
-import mongoose from 'mongoose';
-import { GridFSBucket, ObjectId } from 'mongodb';
-
 
 const app = express();
+
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
+  }));
+  app.use(express.json({ limit: '50mb' }));
+  
+// MongoDB Connection
+const connectDB = async () => {
+    try {
+      await mongoose.connect(process.env.MONGODB_URI , {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000
+      });
+      console.log('MongoDB connected successfully');
+    } catch (err) {
+      console.error('MongoDB connection error:', err);
+      process.exit(1);
+    }
+  };
+  
+  connectDB();
+  let bucket;
+mongoose.connection.once('open', () => {
+  bucket = new GridFSBucket(mongoose.connection.db, {
+    bucketName: 'audioFiles',
+    chunkSizeBytes: 1024 * 255,
+  });
+  console.log('GridFS bucket initialized');
+});
+
+
+// Multer Configuration
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 50 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+      const allowedTypes = [
+        'audio/mpeg', 'audio/wav', 'audio/x-wav',
+        'audio/aac', 'audio/ogg', 'audio/webm'
+      ];
+      allowedTypes.includes(file.mimetype) 
+        ? cb(null, true)
+        : cb(new Error('Invalid file type. Only audio files are allowed.'), false);
+    }
+  });
+
+  const getAudioDuration = (buffer) => {
+    return new Promise((resolve, reject) => {
+      // Create a temporary file to process
+      const tempFilePath = path.join("./cache", 'temp_audio');
+      fs.writeFileSync(tempFilePath, buffer);
+      
+      ffmpeg.ffprobe(tempFilePath, (err, metadata) => {
+        // Clean up the temp file
+        fs.unlink(tempFilePath, () => {});
+        
+        if (err) {
+          console.error('Error getting duration:', err);
+          return reject(err);
+        }
+        
+        resolve(metadata.format.duration || 0);
+      });
+    });
+  };
+  
+
+
+
+// Upload Endpoint with duration calculation
+app.post('/api/upload', upload.single('audio'), async (req, res) => {
+    try {
+      if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+      if (!bucket) throw new Error('GridFS bucket not initialized');
+  
+      const filename = req.file.originalname;
+      const baseName = path.parse(filename).name;
+      
+      // Calculate duration
+      let duration = 0;
+      try {
+        duration = await getAudioDuration(req.file.buffer);
+        console.log(`Calculated duration: ${duration} seconds`);
+      } catch (err) {
+        console.error('Could not calculate duration, using default 0:', err);
+      }
+  
+      const songMetaData = {
+        title: req.body.title || baseName,
+        artist: req.body.artist || 'Unknown Artist',
+        album: req.body.album || 'Unknown Album',
+        duration: duration,
+        file: filename,
+        vote: 0,
+        contentType: req.file.mimetype,
+        size: req.file.size,
+        uploadDate: new Date()
+      };
+  
+      const uploadStream = bucket.openUploadStream(filename, {
+        metadata: songMetaData
+      });
+  
+      uploadStream.end(req.file.buffer);
+  
+      await new Promise((resolve, reject) => {
+        uploadStream.on('finish', resolve);
+        uploadStream.on('error', reject);
+      });
+  
+      res.status(201).json({
+        success: true,
+        fileId: uploadStream.id.toString(),
+        filename: filename,
+        metadata: songMetaData
+      });
+  
+    } catch (error) {
+      console.error('Upload error:', error);
+      res.status(500).json({ 
+        error: 'File upload failed', 
+        details: error.message 
+      });
+    }
+  })
+
 const mp3FoldPath = "assets/music/";
 const cacheDir = path.join('cache');
 fs.ensureDirSync(cacheDir);
@@ -352,23 +483,25 @@ app.get('/LiveSongMeta', (req, res) => {
 });
 
 
-app.get("/api/list", (req, res) => {
+app.get("/api/list", async(req, res) => {
     try {
-
-        // console.log("hi");
-        // Send the JSON response
-        res.setHeader('Cache-Control', 'no-store');
-
-        // Send the JSON response
-        // console.log(songList);
-        res.status(200).json(songList);
-        // console.log(res);
-    } catch (error) {
-        console.error('Error fetching song metadata:', error);
-        res.status(500).json({ error: 'Failed to fetch song metadata' });
+        const files = await mongoose.connection.db.collection('audioFiles.files')
+          .find()
+          .sort({ uploadDate: -1 })
+          .toArray();
+        
+        res.json(files.map(file => ({
+            id:file._id,
+          ...file.metadata,
+          length: file.length,
+          uploadDate: file.uploadDate
+        })));
+    
+      } catch (error) {
+        console.error('List error:', error);
+        res.status(500).json({ error: 'Error listing files', details: error.message });
     }
-
-    // res.json(songList);
+   
 })
 
 
@@ -451,58 +584,92 @@ app.post('/get-song', express.json(), (req, res) => {
 
 
 //song streaming with ranged requests
-app.get('/get-song/:id', (req, res) => {
-    const  id  = parseInt(req.params.id);
-    console.log("hi hi ", id);
+app.get('/get-song/:id', async (req, res) => {
+    console.log("getsong called");
+    try {
+        if (!bucket) throw new Error('GridFS bucket not initialized');
+        
+        const fileId = new ObjectId(req.params.id);
+        const file = await mongoose.connection.db.collection('audioFiles.files').findOne({ _id: fileId });
+        
+        if (!file) return res.status(404).json({ error: 'File not found' });
 
-    // Validate input
-    // if (!id ) {
-    //   return res.status(400).json({ error: 'Song ID and name are required' });
-    // }
+        // Set common headers
+        res.set({
+            'Content-Type': file.metadata.contentType,
+            'Content-Length': file.length,
+            'Content-Disposition': `inline; filename="${file.filename}"`,
+            'Accept-Ranges': 'bytes'
+        });
 
-    // Find the song by id and name
-    // const song = songList.find(
-    //   (song) => song.id === id && song.name.toLowerCase() === name.toLowerCase()
-    // );
+        // Check for range header
+        const range = req.headers.range;
+        if (range) {
+            console.log("Range request received:", range);
+            
+            // Parse range (example: "bytes=0-1000")
+            const parts = range.replace(/bytes=/, "").split("-");
+            const start = parseInt(parts[0], 10);
+            const end = parts[1] ? parseInt(parts[1], 10) : file.length - 1;
+            
+            // Validate range
+            if (start >= file.length || end >= file.length) {
+                res.status(416).set({ 'Content-Range': `bytes */${file.length}` });
+                return res.end();
+            }
 
-    if (id < 0 || id > songList.length) return res.status(404).json({ error: 'Song not found' });
+            // Set partial content headers
+            res.status(206).set({
+                'Content-Range': `bytes ${start}-${end}/${file.length}`,
+                'Content-Length': end - start + 1
+            });
 
-    // If song not found
-    // if (!song) {
-    //   return res.status(404).json({ error: 'Song not found' });
-    // }
-
-    // Get the full file path for the audio file
-    const songFilePath = songQueue[id];
-
-    // Check if the file exists
-    fs.stat(songFilePath, (err, stat) => {
-        if (err) {
-            console.error('File not found:', err);
-            return res.status(500).json({ error: 'Audio file not found' });
+            // Stream the requested range
+            const downloadStream = bucket.openDownloadStream(fileId, {
+                start,
+                end: end + 1 // GridFS expects end to be exclusive
+            });
+            downloadStream.pipe(res);
+        } else {
+            // Full file request
+            console.log("Full file request");
+            const downloadStream = bucket.openDownloadStream(fileId);
+            downloadStream.pipe(res);
         }
-
-        // Set headers to indicate file type and enable range requests
-        res.setHeader('Content-Type', 'audio/mpeg'); // Set the correct MIME type for MP3 (you may adjust based on file type)
-        res.setHeader('Accept-Ranges', 'bytes'); // Enable partial content requests (seekable audio)
-        res.setHeader('Cache-Control', 'public, max-age=5000'); // Cache the song for 1 day (adjust as necessary)
-        res.setHeader('Content-Length', stat.size); // Set the content length (helps client manage buffering)
-
-        // Start streaming the audio file
-        const readStream = fs.createReadStream(songFilePath);
-        readStream.pipe(res); // Stream the audio data to the client
-    });
-});
-app.get('/SongMeta/:id', (req, res) => {
-
-    const id = parseInt(req.params.id);
-    console.log(id);
-    if (id < 0 || id > songList.length) {
-        res.status(404);
-        res.json({ error: "not found" });
+        
+    } catch (error) {
+        console.error('Stream error:', error);
+        res.status(500).json({ error: 'Error streaming audio', details: error.message });
     }
-    // console.log(songList[songIndex]);
-    res.json(songList[id]);
+});
+app.get('/SongMeta/:id', async(req, res) => {
+    console.log("songmeta called")
+    try {
+        const fileId = new ObjectId(req.params.id);
+        const file = await mongoose.connection.db.collection('audioFiles.files').findOne({ _id: fileId });
+        
+        // console.log("songmeta id: ",fileId)
+        // console.log(file)
+        if (!file) return res.status(404).json({ error: 'File not found' });
+        
+
+        console.log(
+            {
+                id:file._id,
+                   ...file.metadata,
+                 uploadDate: file.uploadDate
+               }, "hi"
+        )
+        res.json({
+         id:file._id,
+            ...file.metadata,
+          uploadDate: file.uploadDate
+        });
+    
+      } catch (error) {
+        console.error('Metadata error:', error);
+        res.status(500).json({ error: 'Error fetching metadata', details: error.message });
+      }
 });
 
 
@@ -532,10 +699,14 @@ app.post('/download', express.json(), (req, res) => {
 
 
 const port = 3001;
-app.use(cors({
-  origin: 'http://localhost:5173', // Replace with your Vite app's URL
-  credentials: true, // Allow cookies
-}));
+// Middleware Configuration
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+    console.error('Server error:', err.stack);
+    res.status(500).json({ error: 'Internal server error', message: err.message });
+  });
+
+
 app.listen(port, async () => {
     console.log(`Server running on http://localhost:${port}`);
     updateList();
