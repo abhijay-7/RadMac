@@ -7,7 +7,7 @@ const playlists = [
     {
       "id": 1,
       "name": "This Is Arijit Singh",
-      "image": "https://cdn.dnaindia.com/sites/default/files/2017/11/05/622525-arijit-singh-110617.jpg?im=FitAndFill=(1200,900)"
+      "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcStrv_oPE6vni313HxiliDz1adIGEbzlBmZH7Aczogkb7bLKVGz5chCNwrPYoCHR4KXYr0UjqWiEQHbwYIU6FgaiQ",
     },
     {
       "id": 2,
