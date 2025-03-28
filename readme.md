@@ -34,8 +34,14 @@ mkdir assets/music
 
 
 ### 3. Start the Backend
+## Local music files:
 ```bash
-node  temp.js
+npm  start
+```
+## Mongodb stored music files:
+
+```bash
+npm run dev
 ```
 
 ### 4. Start the Frontend
