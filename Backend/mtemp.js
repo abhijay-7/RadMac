@@ -1,4 +1,4 @@
-import "dotenv/config";
+import dotenv from "dotenv"
 import multer from "multer";
 import mongoose from "mongoose";
 import { GridFSBucket, ObjectId } from "mongodb";
@@ -12,6 +12,7 @@ import { getSongDuration } from "./utilities/ffmpeg_utils.js";
 import * as mm from "music-metadata";
 import bodyParser from "body-parser";
 import cors from "cors";
+dotenv.config({path: "../.env"})
 
 const app = express();
 
@@ -161,7 +162,7 @@ app.post("/api/upload", upload.single("audio"), async (req, res) => {
   }
 });
 
-const mp3FoldPath = "assets/music/";
+const mp3FoldPath = "../assets/music";
 const cacheDir = path.join("cache");
 fs.ensureDirSync(cacheDir);
 
@@ -486,7 +487,7 @@ async function getAudioFilesMetadata(directoryPath) {
 }
 
 async function updateList() {
-  songList = await getAudioFilesMetadata("assets/music");
+  songList = await getAudioFilesMetadata("../assets/music");
   // console.log(songList);
 }
 

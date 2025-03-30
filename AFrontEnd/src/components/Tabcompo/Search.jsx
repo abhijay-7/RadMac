@@ -3,7 +3,8 @@ import List from './List'
 import { BiSolidUpvote } from 'react-icons/bi'
 import axios from 'axios'
 import Fuse from 'fuse.js';
-
+import { useContext } from 'react';
+import { PlayerContext } from '../Player/PlayerContext';
 
 const Search = () => {
      const [checkVal, setCheckval] = useState(false);
