@@ -1,6 +1,7 @@
 import { createContext, useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import { use } from 'react';
 
 export const PlayerContext = createContext();
 
@@ -15,6 +16,7 @@ export const PlayerProvider = ({ children }) => {
   const [queue, setQueue] = useState([]);
   const audioRef = useRef(null);
 
+  
   const fetchTrackData = async (trackId) => {
     try {
       const metaUrl = `/hi/SongMeta/${trackId}`;
@@ -25,6 +27,7 @@ export const PlayerProvider = ({ children }) => {
       return null;
     }
   };
+
 
   const playTrack = async (trackId) => {
     const trackData = await fetchTrackData(trackId);
