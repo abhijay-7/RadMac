@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Tab from './Tabcompo/Tab'
 import { Link } from 'react-router';
 import playlists from './Playlistcompo/GenrePlaylist';
@@ -6,11 +6,10 @@ import Category from './Playlistcompo/Category';
 import PlaylistGrid from './HomePage/PlaylistGrid';
 import PlaylistSlider from './HomePage/PlaylistSlider';
 import MeetDevButton from './Meetdev/MeetDevButton';
+import axios from 'axios';
 
 const Home = () => {
 
-
-  
 
 
   return (

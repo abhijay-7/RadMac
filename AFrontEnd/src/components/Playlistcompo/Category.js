@@ -5,17 +5,19 @@ import Classical from '../../assets/Playlist/classical.jpeg'
 import Electronic from '../../assets/Playlist/electornic.jpeg'
 import Reggae from '../../assets/Playlist/rageclassic.jpeg'
 import rock from '../../assets/Playlist/classicrock.jpg'
+import bollywood from '../../assets/Playlist/bollywood.jpg'
 
 
 
 
 const Category =
 [
+   
     {
       "id": 0,
-      "category": "Pop",
-      "title": "Top Pop Hits",
-      "image": pop,
+      "category": "Hindi Bollywood",
+      "title": "Top  Hits",
+      "image": bollywood,
       "streams": "125k"
     },
     {
@@ -59,7 +61,14 @@ const Category =
       "title": "Reggae Classics",
       "image": Reggae,
       "streams": "700k"
-    }
+    },
+    {
+      "id": 7,
+      "category": "Pop",
+      "title": "Top Pop Hits",
+      "image": pop,
+      "streams": "125k"
+    },
   ]
   
 

@@ -2,8 +2,8 @@
     const playlists = [
       {
         "id": 0,
-        "category": "Pop",
-        "title": "Top Pop Hits",
+        "category": "Bollywood",
+        "title": "Top Hindi Bollywood",
         "image": "https://i.ibb.co/6Xjz6r8/pop-music.jpg",
         "songs": [
           { "songId": 1, "artist": "Dua Lipa", "songName": "Levitating" },
@@ -125,7 +125,25 @@
           { "songId": 9, "artist": "Sizzla", "songName": "Just One of Those Days" },
           { "songId": 10, "artist": "Damian Marley", "songName": "Welcome to Jamrock" }
         ]
-      }
+      },
+      {
+        "id": 7,
+        "category": "Pop",
+        "title": "Top Pop Hits",
+        "image": "https://i.ibb.co/6Xjz6r8/pop-music.jpg",
+        "songs": [
+          { "songId": 1, "artist": "Dua Lipa", "songName": "Levitating" },
+          { "songId": 2, "artist": "Ariana Grande", "songName": "Positions" },
+          { "songId": 3, "artist": "The Weeknd", "songName": "Blinding Lights" },
+          { "songId": 4, "artist": "Olivia Rodrigo", "songName": "Good 4 U" },
+          { "songId": 5, "artist": "Harry Styles", "songName": "Watermelon Sugar" },
+          { "songId": 6, "artist": "Billie Eilish", "songName": "Bad Guy" },
+          { "songId": 7, "artist": "Lizzo", "songName": "Truth Hurts" },
+          { "songId": 8, "artist": "Ed Sheeran", "songName": "Shape of You" },
+          { "songId": 9, "artist": "Katy Perry", "songName": "Teenage Dream" },
+          { "songId": 10, "artist": "Shawn Mendes", "songName": "Stitches" }
+        ]
+      },
     ];
 
     export default playlists
