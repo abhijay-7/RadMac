@@ -27,7 +27,7 @@ const playlistSchema = new mongoose.Schema({
   },
   userEmail: {
     type: String,
-    required: true
+    required: false
   },
   coverArt: {
     type: String,

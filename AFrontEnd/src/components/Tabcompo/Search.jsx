@@ -16,8 +16,6 @@ const Search = () => {
       const [dropdownVisible, setDropdownVisible] = useState(false);
       const [songList, setOsongList] = useState([]);
       const [filteredList, setsongList] = useState([]);
-
-
     useEffect(() => {
         axios
           .get("/api/list/")

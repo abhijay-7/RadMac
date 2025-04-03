@@ -96,9 +96,11 @@ const getAudioDuration = (buffer) => {
 
 // Playlist section
 
+
 // Create a new playlist
 app.post('/playlist/create', async (req, res) => {
   try {
+    console.log(req.body)
     const playlist = new Playlist(req.body);
     await playlist.save();
     res.status(201).send(playlist);
@@ -745,6 +747,27 @@ app.get("/get-song/:id", async (req, res) => {
     res
       .status(500)
       .json({ error: "Error streaming audio", details: error.message });
+  }
+});
+app.get("/rawSongMeta/:id", async (req, res) => {
+  console.log("Raw songmeta called");
+  try {
+    const fileId = new ObjectId(req.params.id);
+    const file = await mongoose.connection.db
+      .collection("audioFiles.files")
+      .findOne({ _id: fileId });
+
+    // console.log("songmeta id: ",fileId)
+    // console.log(file)
+    if (!file) return res.status(404).json({ error: "File not found" });
+
+ 
+    res.json(file);
+  } catch (error) {
+    console.error("Metadata error:", error);
+    res
+      .status(500)
+      .json({ error: "Error fetching metadata", details: error.message });
   }
 });
 app.get("/SongMeta/:id", async (req, res) => {
