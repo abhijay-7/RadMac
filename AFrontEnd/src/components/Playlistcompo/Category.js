@@ -14,10 +14,17 @@ const Category =
 [
    
     {
-      "id": 0,
+      "id": '67ee6ae4d5ea48e59f91c406',
       "category": "Hindi Bollywood",
       "title": "Top  Hits",
       "image": bollywood,
+      "streams": "125k"
+    },
+    {
+      "id": '67eee41cbcd7285e1c9d4e1b',
+      "category": "Pop",
+      "title": "Top Pop Hits",
+      "image": pop,
       "streams": "125k"
     },
     {
@@ -62,13 +69,7 @@ const Category =
       "image": Reggae,
       "streams": "700k"
     },
-    {
-      "id": 7,
-      "category": "Pop",
-      "title": "Top Pop Hits",
-      "image": pop,
-      "streams": "125k"
-    },
+   
   ]
   
 

@@ -7,6 +7,7 @@ import PlaylistGrid from './HomePage/PlaylistGrid';
 import PlaylistSlider from './HomePage/PlaylistSlider';
 import MeetDevButton from './Meetdev/MeetDevButton';
 import axios from 'axios';
+import Header from './Header';
 
 const Home = () => {
 
@@ -14,9 +15,7 @@ const Home = () => {
 
   return (
     <>
-    <div className='m-2 p-2 '>
-    <h1 >Radmac</h1>
-    </div>
+     <Header></Header>
     <PlaylistGrid/>
     <PlaylistSlider/>
 <main class="grid place-items-center min-h-screen bg-gradient-to-t from-blue-200 to-indigo-900 p-5">

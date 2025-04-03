@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import photo from '../../assets/Playlist/popCover.jpeg'
 import { Link } from "react-router";
+import { PlayerContext } from "../Player/PlayerContext";
 
-const playlists = [
+const playliststemp = [
   {
     id: 1,
     name: "Kendrick Lamar",
@@ -36,6 +37,11 @@ const playlists = [
 ];
 
 const PlaylistGrid = () => {
+  const {playlists, getplaylist} = useContext(PlayerContext)
+  useEffect(()=>{
+    getplaylist()
+  },[])
+console.log("home",playlists)
   return (
     <>
      <div className="flex items-center mx-2 px-2">
@@ -44,8 +50,8 @@ const PlaylistGrid = () => {
     
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
      
-      {playlists.map((playlist) => (
-       <Link to={'/comingsoon'}>
+      {playliststemp.map((playlist) => (
+       <Link to={`/playlist/${playlist.id}`}>
 
        <div
           key={playlist.id}

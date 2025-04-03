@@ -6,6 +6,7 @@ import axios from "axios";
 import Fuse from "fuse.js";
 import List from "./List";
 import ListCompo from "../Playlistcompo/ListCompo";
+import EmptyPlaylist from "../Playlistcompo/EmptyPlaylist";
 
 const Playlist = () => {
   const { id } = useParams();
@@ -32,8 +33,8 @@ const Playlist = () => {
         setOsongList(response.data.songs);
         setsongList(response.data.songs);
         setList(response.data);
-        updatelist();
-        // console.log(response.data);
+        updatelist()
+        // console.log(response.data);()
       })
       .catch((error) => {
         console.log(error);
@@ -69,7 +70,6 @@ const Playlist = () => {
     setQuery(value);
     if (value == "") {
       setsongList(songList);
-
       return;
     }
 
@@ -82,13 +82,34 @@ const Playlist = () => {
     }
   };
 
+  const [showEmptyState, setShowEmptyState] = useState(false);
+
+  useEffect(() => {
+    if (!list) {
+      const timer = setTimeout(() => {
+        setShowEmptyState(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [list]);
+
   if (!list) {
-    return <div>Category not found</div>;
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        {showEmptyState ? (
+          <div className="animate-fade-in">
+            <EmptyPlaylist />
+          </div>
+        ) : (
+          <div className="text-gray-400">Loading playlist...</div>
+        )}
+      </div>
+    );
   }
   return (
     <>
-      <div class=" flex items-center w-ful">
-        <div class="flex w-full m-2 bg-gray-900 shadow-md rounded-lg overflow-hidden ">
+      <div class=" flex items-center justify-center w-full">
+        <div class="flex min-h-[830px] min-h-400px bg-gray-900 shadow-md rounded-lg overflow-hidden ">
           <div class="flex flex-col w-full">
             <div class="flex flex-col sm:flex-row items-center p-5">
               {list.name}
@@ -122,8 +143,6 @@ const Playlist = () => {
                 {
                   filteredList.map((item, index) =>(
                     <ListCompo key={index} item= {item} ></ListCompo>
-                    
-
                   ))  
                 }
             </div>

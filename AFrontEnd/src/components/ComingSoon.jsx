@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router'
 
 const ComingSoon = () => {
   return (
@@ -25,6 +26,13 @@ const ComingSoon = () => {
 
         {/* Developer Text */}
         <p className="mt-8 text-sm text-gray-300">We are working on it...</p>
+        <Link 
+      to="/team" 
+      className="  mt-8   bg-gray-900 w-full h-full rounded-full flex items-center justify-center shadow-xl hover:shadow-2xl transition-all hover:scale-110"
+      aria-label="Meet the developers"
+    >
+      <span className="text-2xl m-3">Meet the developers👨‍💻</span>
+    </Link>
       </div>
     </div>
     </>

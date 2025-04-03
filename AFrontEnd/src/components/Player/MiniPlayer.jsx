@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { PlayerContext } from './PlayerContext';
-import { FaPlay, FaPause, FaStepForward, FaStepBackward } from 'react-icons/fa';
+import { FaPlay, FaPause, FaStepForward, FaStepBackward, FaMusic } from 'react-icons/fa';
 import { MdQueueMusic } from 'react-icons/md';
 import ProgressBar from './progressBar';
 
@@ -23,20 +23,22 @@ const MiniPlayer = () => {
 
   return (
     <div 
-      className="fixed bottom-16  left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-gray-700/50 z-50 transition-all "
+      className="fixed bottom-16  left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-gray-700/50 z-40 transition-all "
       // onClick={togglePlayerView} 
     >
-      <div className="flex items-center justify-between px-4 ">
+      <div className="flex items-center justify-between  px-1 ">
         {/* Track info */}
         <div className="flex items-center flex-1 min-w-0">
           {/* Album Art */}
-          <div className="w-12 h-12 rounded-lg mr-3 flex-shrink-0 overflow-hidden shadow-md">
-            <img 
-              src={currentTrack.coverUrl || 'default-album-art.jpg'} 
-              className="w-full h-full object-cover"
-              alt="Album cover"
-            />
-          </div>
+           <div className="flex-shrink-0 mx-2 mt-2 w-10 h-10 rounded-md overflow-hidden bg-gray-700">
+                {currentTrack.coverUrl ? (
+                  <img src={currentTrack.coverUrl} alt={item.title} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <FaMusic size={14} />
+                  </div>
+                )}
+              </div>
           
           {/* Song Details */}
           <div className="flex-1 min-w-0">
@@ -46,7 +48,7 @@ const MiniPlayer = () => {
         </div>
 
         {/* Controls */}
-        <div className="flex items-center space-x-4 ml-4">
+        <div className="flex items-center space-x-2 mx-4">
           {queue.length > 0 && (
             <div className="flex items-center text-xs text-teal-400 mr-2">
               <MdQueueMusic className="mr-1" size={16} />

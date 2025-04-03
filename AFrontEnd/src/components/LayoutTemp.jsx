@@ -9,7 +9,7 @@ import BottomTab from './BottomTab'
 const LayoutTemp = () => {
   return (
     <>
-    {/* <Header></Header> */}
+   
     {/* <Tab></Tab> */}
     {/* <MiniPlayer></MiniPlayer>
     <PLayerCard></PLayerCard> */}

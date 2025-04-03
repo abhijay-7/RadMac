@@ -15,7 +15,20 @@ export const PlayerProvider = ({ children }) => {
   const [duration, setDuration] = useState(0);
   const [queue, setQueue] = useState([]);
   const audioRef = useRef(null);
+  const [playlists , setPlaylists] = useState([]);
 
+ 
+  const getplaylist=async()=>{
+   try {
+    const res =  await axios.get(`/hi/playlist/all`)
+      console.log(res.data);
+      setPlaylists(res.data)
+      // console.log(response.data);
+    }
+      catch(error)  {
+        console.log(error);
+      };
+    }
   
   const fetchTrackData = async (trackId) => {
     try {
@@ -147,7 +160,9 @@ export const PlayerProvider = ({ children }) => {
         playNextTrack,
         playPreviousTrack,
         queue ,
-        addToQueue: (track) => setQueue([...queue, track])
+        addToQueue: (track) => setQueue([...queue, track]),
+        playlists,
+        getplaylist
       }}
     >
       {children}

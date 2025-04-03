@@ -28,13 +28,16 @@ const router = createBrowserRouter(
         <Route path='home' element={<Home/>}/>
         <Route path='search' element={<Search/>}/>
         <Route path='playlists' element={<Playlisttab/>}/>
+        <Route path='livesongs' element={<ComingSoon/>}/>
+
         <Route path='play/:id' element={<PLayerCard/>}/>
         <Route path='/playlist/:id' element={<Playlist/>}/>
         <Route path='/comingsoon' element={<ComingSoon/>}/>
         <Route path='play/:id' element={<FullPlayer fullMode={true} />}/>
-   </Route>
         <Route path='/team' element={<Team/>}/>
         <Route path='/team/:id' element={<MeetTheDeveloper/>}/>
+   </Route>
+        
         <Route path='/admin' element={<Uploader/>}/>
 
    </>

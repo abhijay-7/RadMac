@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { PlayerContext } from "../Player/PlayerContext";
 import { FaPlay, FaMusic } from "react-icons/fa";
 
-const ListCompo = ({ item, index }) => {
+const   ListCompo = ({ item, index }) => {
   const navigate = useNavigate();
   const { playTrack } = useContext(PlayerContext);
 
@@ -22,7 +22,7 @@ const ListCompo = ({ item, index }) => {
   return (
     <div 
       onClick={handlePlay}
-      className="group flex items-center px-4 py-3 hover:bg-gray-800/50 transition-colors rounded-lg cursor-pointer border-b border-gray-800 last:border-0"
+      className="group flex items-center  py-3 hover:bg-gray-800/50 transition-colors rounded-lg cursor-pointer border-b border-gray-800 last:border-0"
     >
       
       {/* Track info */}
@@ -54,13 +54,7 @@ const ListCompo = ({ item, index }) => {
         <span className="text-xs text-gray-400 mr-4">
           {formatDuration(item.metadata.duration)}
         </span>
-        <button 
-          onClick={handlePlay}
-          className="opacity-0 group-hover:opacity-100 p-2 text-gray-400 hover:text-white rounded-full hover:bg-gray-700 transition-all"
-          aria-label="Play track"
-        >
-          <FaPlay size={12} />
-        </button>
+       
       </div>
     </div>
   );

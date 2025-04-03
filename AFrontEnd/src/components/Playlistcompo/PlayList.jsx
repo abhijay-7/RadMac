@@ -10,7 +10,7 @@ const PlaylistList = ({ playlist }) => {
         <div
           key={playlist._id}
           onClick={() => navigate(`/playlist/${playlist._id}`)}
-          className="flex items-center p-3 hover:bg-gray-800 rounded-lg cursor-pointer transition-colors"
+          className="flex items-center py-3 gap-x-1  hover:bg-gray-800 rounded-lg cursor-pointer transition-colors"
         >
           {/* Cover Art */}
           <div className="w-12 h-12 rounded-md overflow-hidden mr-3 flex-shrink-0">
