@@ -108,13 +108,13 @@ const Playlist = () => {
   }
   return (
     <>
-      <div class=" flex items-center justify-center w-full">
-        <div class="flex min-h-[830px] min-h-400px bg-gray-900 shadow-md rounded-lg overflow-hidden ">
+      <div class="  w-full">
+        <div class="flex min-h-[830px] min-w-500px bg-gray-900 shadow-md rounded-lg overflow-hidden ">
           <div class="flex flex-col w-full">
             <div class="flex flex-col sm:flex-row items-center p-5">
               {list.name}
               <div class="flex items-center">
-                <div class="flex space-x-3 p-2"> {}</div>
+                <div class="flex space-x-3 m-2 p-2"> {list.description}</div>
               </div>
             </div>
             <div class="flex flex-col p-2 ">
