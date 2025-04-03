@@ -162,7 +162,7 @@ app.post("/api/upload", upload.single("audio"), async (req, res) => {
   }
 });
 
-const mp3FoldPath = "../assets/music";
+const mp3FoldPath = "./assets/music";
 const cacheDir = path.join("cache");
 fs.ensureDirSync(cacheDir);
 
@@ -487,7 +487,7 @@ async function getAudioFilesMetadata(directoryPath) {
 }
 
 async function updateList() {
-  songList = await getAudioFilesMetadata("../assets/music");
+  songList = await getAudioFilesMetadata("./assets/music");
   // console.log(songList);
 }
 
