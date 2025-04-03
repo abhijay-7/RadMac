@@ -1,64 +1,69 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useContext } from 'react';
+import { PlayerContext } from "../Player/PlayerContext";
+import { FaPlay, FaMusic } from "react-icons/fa";
 
-const Listcompo = () => {
+const ListCompo = ({ item, index }) => {
+  const navigate = useNavigate();
+  const { playTrack } = useContext(PlayerContext);
 
-    const [playlists, setPlaylists]  = useState([]);
+  const handlePlay = (e) => {
+    e.stopPropagation();
+    playTrack(item._id);
+  };
 
-    async function fetchPlaylists(){
-        try{
-            const res  = await axios.get('/hi/playlist/all')
-            console.log(res.data);
-            setPlaylists(res.data);
-        }
-        catch(e){
-
-        }
-    }
-    useEffect(()=>{
-        fetchPlaylists()
-
-    },[])
-
-    const handleSelectPlaylist =  ()=>{
-
-    }
+  const formatDuration = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
 
   return (
-<div className="space-y-1">
-      {playlists.map((playlist) => (
-        <Link to = {`/playlist/${playlist._id}`}>
-        <div
-          key={playlist._id}
-        
-          className={`flex items-center p-3 rounded-lg cursor-pointer transition-colors 
-          `}
-        >
-          <img
-            src={playlist.coverArt}
-            alt={`${playlist.name} cover`}
-            className="w-12 h-12 rounded-md object-cover"
-          />
-
-
-          <div className="ml-3 flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">
-              {playlist.name}
-            </p>
-            <p className="text-xs text-gray-500 truncate">
-              {playlist.userName}
-            </p>
-          </div>
-
-          
+    <div 
+      onClick={handlePlay}
+      className="group flex items-center px-4 py-3 hover:bg-gray-800/50 transition-colors rounded-lg cursor-pointer border-b border-gray-800 last:border-0"
+    >
+      
+      {/* Track info */}
+      <div className="flex-1 min-w-0 flex items-center">
+        <div className="w-10 h-10 bg-gray-700 rounded-md flex items-center justify-center mr-3 flex-shrink-0">
+          {item.metadata.coverArt ? (
+            <img 
+              src="" 
+              alt={item.metadata.title}
+              className="w-full h-full object-cover rounded-md"
+            />
+          ) : (
+            <FaMusic className="text-gray-500" />
+          )}
         </div>
-        </Link>
-        
-      ))}
-    </div>
 
+        <div className="min-w-0">
+          <h3 className="text-white font-medium truncate group-hover:text-indigo-400 transition-colors">
+            {item.metadata.title}
+          </h3>
+          <p className="text-xs text-gray-400 truncate">
+            {item.metadata.artist || 'Unknown Artist'}
+          </p>
+        </div>
+      </div>
+
+      {/* Duration and play button */}
+      <div className="flex items-center ml-4">
+        <span className="text-xs text-gray-400 mr-4">
+          {formatDuration(item.metadata.duration)}
+        </span>
+        <button 
+          onClick={handlePlay}
+          className="opacity-0 group-hover:opacity-100 p-2 text-gray-400 hover:text-white rounded-full hover:bg-gray-700 transition-all"
+          aria-label="Play track"
+        >
+          <FaPlay size={12} />
+        </button>
+      </div>
+    </div>
   );
 };
 
-export default Listcompo;
+export default ListCompo;

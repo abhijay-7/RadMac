@@ -1,19 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from 'react';
 import { PlayerContext } from "../Player/PlayerContext";
 import { FaPlus, FaTimes } from "react-icons/fa";
+import axios from "axios";
+import CreatePlaylistDialog from "../Playlistcompo/CreatePlaylistDialog";
 
 const List = ({ item }) => {
   const navigate = useNavigate();
   const { playTrack } = useContext(PlayerContext);
   const [showPlaylists, setShowPlaylists] = useState(false);
-  const [playlists, setPlaylists] = useState([
-    { id: 1, name: "Favorites" },
-    { id: 2, name: "Workout Mix" },
-    { id: 3, name: "Chill Vibes" },
-    { id: 4, name: "Road Trip" }
-  ]);
+  const [playlists, setPlaylists] = useState([]);
+  const [isDialogOpen, setisDialogOpen] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get(`/hi/playlist/all`)
+      .then((response) => {
+        console.log(response.data);
+        setPlaylists(response.data)
+        
+        // console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      
+  }, []);
+
 
   const handlePlay = (id) => {
     playTrack(id);
@@ -24,12 +38,26 @@ const List = ({ item }) => {
     setShowPlaylists(!showPlaylists);
   };
 
-  const handleAddToPlaylist = (e, playlistId) => {
+  const handleAddToPlaylist = async(e, playlistId) => {
     e.stopPropagation();
-    console.log(`Adding ${item.title} to playlist ${playlistId}`);
+    console.log(`Adding ${item.id} to playlist ${playlistId}`);
+    let res =  await axios.get(`/hi/rawSongMeta/${item.id}`)
+    console.log(item)
+
+    res = await axios.post(`/hi/playlist/addSong/${playlistId}`,res.data)
+    console.log(res)
+
     // Here you would call your actual API/function to add to playlistst
     setShowPlaylists(false);
   };
+
+  const createNewPlaylist = async(playlistData)=>{
+    const res = await axios.post('/hi/playlist/create',playlistData)
+    alert(res.status)
+    console.log(res)
+
+  }
+
 
   return (
     <div 
@@ -76,15 +104,16 @@ const List = ({ item }) => {
               {playlists.map(playlist => (
                 <div
                   key={playlist.id}
-                  onClick={(e) => handleAddToPlaylist(e, playlist.id)}
+                  onClick={(e) => handleAddToPlaylist(e, playlist._id)}
                   className="px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 rounded cursor-pointer"
                 >
                   {playlist.name}
                 </div>
               ))}
             </div>
-            <div className="px-3 py-2 text-sm text-indigo-400 hover:bg-gray-700 rounded cursor-pointer border-t border-gray-700">
+            <div onClick ={()=>{setisDialogOpen(true)} } className="px-3 py-2 text-sm text-indigo-400 hover:bg-gray-700 rounded cursor-pointer border-t border-gray-700">
               + Create new playlist
+              {isDialogOpen && <CreatePlaylistDialog onCreate={createNewPlaylist}  onClose={()=>setisDialogOpen(false) }></CreatePlaylistDialog>}
             </div>
           </div>
         </div>

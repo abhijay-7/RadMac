@@ -14,6 +14,9 @@ const Home = () => {
 
   return (
     <>
+    <div className='m-2 p-2 '>
+    <h1 >Radmac</h1>
+    </div>
     <PlaylistGrid/>
     <PlaylistSlider/>
 <main class="grid place-items-center min-h-screen bg-gradient-to-t from-blue-200 to-indigo-900 p-5">

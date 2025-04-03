@@ -5,6 +5,7 @@ import { useParams } from "react-router";
 import axios from "axios";
 import Fuse from "fuse.js";
 import List from "./List";
+import ListCompo from "../Playlistcompo/ListCompo";
 
 const Playlist = () => {
   const { id } = useParams();
@@ -81,9 +82,9 @@ const Playlist = () => {
     }
   };
 
-  // if (!list) {
-  //   return <div>Category not found</div>;
-  // }
+  if (!list) {
+    return <div>Category not found</div>;
+  }
   return (
     <>
       <div class=" flex items-center w-ful">
@@ -117,54 +118,14 @@ const Playlist = () => {
 </form>
 </div>
 
-              {id == 0
-                ?
-                
+             
+                {
                   filteredList.map((item, index) =>(
-                      <List key={index} item= {item}> </List>
-                  ))
-              
-                : list.songs.map((item, index) => (
-                    <>
-                      {/* // list  1 */}
-                      <div className="">
-                        <div
-                          key={item.songId}
-                          class="flex py-3 cursor-pointer hover:shadow-md px-2 "
-                        >
-                          <img
-                            class="w-10 h-10 object-cover rounded-lg"
-                            alt="User avatar"
-                            src="https://images.unsplash.com/photo-1477118476589-bff2c5c4cfbb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=200&q=200"
-                          />
-                          <div class="flex flex-col px-1 w-full">
-                            <span class="text-sm text-rhite capitalize font-semibold pt-1">
-                              {item.songName}
-                            </span>
-                            <span class="text-xs text-gray-500 uppercase font-medium ">
-                              {item.artist}
-                            </span>
-                          </div>
-                        </div>
-                        {/* // list  2 */}
-                        {/* <div class="flex border-b py-3 cursor-pointer hover:shadow-md px-2 ">
-                  <img
-                    class="w-10 h-10 object-cover rounded-lg"
-                    alt="User avatar"
-                    src="https://images.unsplash.com/photo-1477118476589-bff2c5c4cfbb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=200&q=200"
-                  />
-                  <div class="flex flex-col px-2 w-full">
-                    <span class="text-sm text-red-500 capitalize font-semibold pt-1">
-                      I think I need a sunrise, I'm tired of the sunset
-                    </span>
-                    <span class="text-xs text-gray-500 uppercase font-medium ">
-                      -"Boston," Augustana
-                    </span>
-                  </div>
-                </div> */}
-                      </div>
-                    </>
-                  ))}
+                    <ListCompo key={index} item= {item} ></ListCompo>
+                    
+
+                  ))  
+                }
             </div>
           </div>
         </div>

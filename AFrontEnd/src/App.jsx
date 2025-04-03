@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { Button } from 'flowbite-react';
-import Layout from './components/Layout';
 import LayoutTemp from './components/LayoutTemp';
 import { PlayerContext, PlayerProvider } from './components/Player/PlayerContext';
 import FullPlayer from './components/Player/FullPlayer';
