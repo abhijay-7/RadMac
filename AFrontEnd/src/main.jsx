@@ -52,7 +52,7 @@ const router = createBrowserRouter(
         <Route path='favourites' element={<Favourite/>}/>
         <Route path='liveSongs' element={<LiveSongs/>}/>
         <Route path='play/:id' element={<PLayerCard/>}/>
-        <Route path='playlist/:id' element={<Playlist/>}/>
+        <Route path='/playlist/:id' element={<Playlist/>}/>
         <Route path='/comingsoon' element={<ComingSoon/>}/>
         <Route path='play/:id' element={<FullPlayer fullMode={true} />}/>
    </Route>

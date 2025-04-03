@@ -12,6 +12,7 @@ import { getSongDuration } from "./utilities/ffmpeg_utils.js";
 import * as mm from "music-metadata";
 import bodyParser from "body-parser";
 import cors from "cors";
+import Playlist from "./schema/playlist.js";
 dotenv.config({path: "../.env"})
 
 const app = express();
@@ -92,6 +93,101 @@ const getAudioDuration = (buffer) => {
     });
   });
 };
+
+// Playlist section
+
+// Create a new playlist
+app.post('/playlist/create', async (req, res) => {
+  try {
+    const playlist = new Playlist(req.body);
+    await playlist.save();
+    res.status(201).send(playlist);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+// Get all playlists
+app.get('/playlist/all', async (req, res) => {
+  try {
+    const playlists = await Playlist.find();
+    res.send(playlists);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
+// Get a playlist by ID
+app.get('/playlist/:id', async (req, res) => {
+  try {
+    const playlist = await Playlist.findById(req.params.id);
+    if (!playlist) {
+      return res.status(404).send();
+    }
+    res.send(playlist);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
+// Delete a playlist
+app.post('/playlist/delete/:id', async (req, res) => {
+  try {
+    const playlist = await Playlist.findByIdAndDelete(req.params.id);
+    if (!playlist) {
+      return res.status(404).send();
+    }
+    res.send(playlist);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// add song
+app.post('/playlist/addSong/:id', async (req, res) => {
+  try {
+    const playlist = await Playlist.findById(req.params.id);
+    if (!playlist) {
+      return res.status(404).send();
+    }
+    playlist.songs.push(req.body);
+    await playlist.save();
+    res.send(playlist);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+
+// Remove a song from a playlist
+app.post('/playlist/deleteSong/:id/songs/:songId', async (req, res) => {
+  try {
+    const playlist = await Playlist.findById(req.params.id);
+    if (!playlist) {
+      return res.status(404).send();
+    }
+    playlist.songs = playlist.songs.filter(
+      song => song._id.toString() !== req.params.songId
+    );
+    await playlist.save();
+    res.send(playlist);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
+//
+
+
+
+
+
+
+
+
 
 // Upload Endpoint with duration calculation
 app.post("/api/upload", upload.single("audio"), async (req, res) => {

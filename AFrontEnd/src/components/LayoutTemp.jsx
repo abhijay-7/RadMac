@@ -4,16 +4,18 @@ import { Outlet } from 'react-router-dom'
 import Header from './Header'
 import MiniPlayer from '../components/Player/MiniPlayer'
 import PLayerCard from './Player/PLayerCard'
+import BottomTab from './BottomTab'
 
 const LayoutTemp = () => {
   return (
     <>
     {/* <Header></Header> */}
-    <Tab></Tab>
+    {/* <Tab></Tab> */}
     {/* <MiniPlayer></MiniPlayer>
     <PLayerCard></PLayerCard> */}
    
     <Outlet></Outlet>
+    <BottomTab></BottomTab>
 
     </>
   )

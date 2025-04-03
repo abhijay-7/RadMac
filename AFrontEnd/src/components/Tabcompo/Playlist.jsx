@@ -11,7 +11,7 @@ const Playlist = () => {
   const categoryId = parseInt(id);
 
   // Find the category that matches the ID
-  const list = playlists.find((item) => item.id === categoryId);
+  const [list ,setList] = useState();
 
   const [checkVal, setCheckval] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,17 +25,21 @@ const Playlist = () => {
 
   useEffect(() => {
     axios
-      .get("/api/list/")
+      .get(`/hi/playlist/${id}`)
       .then((response) => {
-        console.log(response.data);
-        setOsongList(response.data);
-        setsongList(response.data);
+        console.log(response.data.songs);
+        setOsongList(response.data.songs);
+        setsongList(response.data.songs);
+        setList(response.data);
         updatelist();
         // console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
+
+
+      
   }, []);
   
 
@@ -77,18 +81,18 @@ const Playlist = () => {
     }
   };
 
-  if (!list) {
-    return <div>Category not found</div>;
-  }
+  // if (!list) {
+  //   return <div>Category not found</div>;
+  // }
   return (
     <>
       <div class=" flex items-center w-ful">
         <div class="flex w-full m-2 bg-gray-900 shadow-md rounded-lg overflow-hidden ">
           <div class="flex flex-col w-full">
             <div class="flex flex-col sm:flex-row items-center p-5">
-              {list.title}
+              {list.name}
               <div class="flex items-center">
-                <div class="flex space-x-3 p-2"> {list.category}</div>
+                <div class="flex space-x-3 p-2"> {}</div>
               </div>
             </div>
             <div class="flex flex-col p-2 ">

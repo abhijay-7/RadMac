@@ -23,7 +23,7 @@ const MiniPlayer = () => {
 
   return (
     <div 
-      className="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-gray-700/50 z-50 transition-all "
+      className="fixed bottom-16  left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-gray-700/50 z-50 transition-all "
       // onClick={togglePlayerView} 
     >
       <div className="flex items-center justify-between px-4 ">
