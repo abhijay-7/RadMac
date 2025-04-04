@@ -13,7 +13,7 @@ import * as mm from "music-metadata";
 import bodyParser from "body-parser";
 import cors from "cors";
 import Playlist from "./schema/playlist.js";
-dotenv.config({path: "../.env"})
+dotenv.config({path: "./.env"})
 
 const app = express();
 
