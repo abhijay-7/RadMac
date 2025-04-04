@@ -20,7 +20,7 @@ const Playlist = () => {
   const [fuse, setFuse] = useState(null);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
-  const [keys, setKeys] = useState(["title"]);
+  const [keys, setKeys] = useState(["metadata.title"]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [songList, setOsongList] = useState([]);
   const [filteredList, setsongList] = useState([]);
@@ -52,6 +52,7 @@ const Playlist = () => {
     };
     const fuseInstance = new Fuse(songList, options);
     setFuse(fuseInstance);
+    console.log(songList)
     // console.log("hi hi");
     // console.log(fuseInstance);
   }, [keys, songList]);
